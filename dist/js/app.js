@@ -1,4 +1,8 @@
-import { Negociacao } from "./models/negociacao.js";
-// em TS caso seja esquecido algum parametro, será apresentado um erro
-const negociacao = new Negociacao(new Date(), 10, 100);
-console.log(negociacao.volume);
+import { NegociacaoController } from "./controllers/negociacao-controller.js";
+//sempre é necessário na importação de um módulo com TypeScript inserir o ".js" após o nome do arquivo
+const controller = new NegociacaoController;
+const form = document.querySelector('.form');
+form.addEventListener('submit', event => {
+    event.preventDefault();
+    controller.adiciona();
+});
