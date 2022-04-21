@@ -1,0 +1,12 @@
+{
+    "injectChanges": false,
+    "watchOptions": { 
+        "ignored": "node_modules" 
+    },
+    "port": 8080,
+    "ui": {
+        "port": 8081
+    },
+    "browser": ["firefox"],
+    "open": true
+}
