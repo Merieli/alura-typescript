@@ -5,22 +5,25 @@ import { MensagemView } from '../views/mesagem-view.js';
 import { NegociacoesView } from '../views/negociacoes-view.js';
 
 export class NegociacaoController {
+    // usar o "| null" define que a propriedade pode ser do tipo HTMLInputElement ou null
     private inputData: HTMLInputElement;
     private inputQuantidade: HTMLInputElement;
     private inputValor: HTMLInputElement;
     private negociacoes = new Negociacoes();
-    private negociacoesView = new NegociacoesView('#negociacoesView');
+    private negociacoesView = new NegociacoesView('#negociacoesView', true);
     private mensagemView = new MensagemView('#mensagemView');
 
     constructor() {
-        this.inputData = document.querySelector('#data');
-        this.inputQuantidade = document.querySelector('#quantidade');
-        this.inputValor = document.querySelector('#valor');
+        // casting explicito: "as HTMLInputElement" depois do trecho atribuido ou "<HTMLInputElement>" antes do trecho atribuido converte o valor para um tipo definido que é garantido para evitar erroa, forçando a mudança do tipo a partir do momento que ele é selecionado com o querySelector, para não gerar futuros problemas
+        this.inputData = <HTMLInputElement>document.querySelector('#data'); 
+        this.inputQuantidade = document.querySelector('#quantidade') as HTMLInputElement;
+        this.inputValor = document.querySelector('#valor') as HTMLInputElement;
         this.negociacoesView.update(this.negociacoes); //quando a pagina for criada será feita a inserção da tabela
     }
 
     public adiciona(): void {
-        const negociacao = this.criaNegociacao();
+        // o método criaDe pode ser chamado a partir da classse sem a necessidade de criar uma instancia dela, devido ao modificador "static"
+        const negociacao = Negociacao.criaDe(this.inputData.value, this.inputQuantidade.value, this.inputValor.value)
         if (!this.ehDiaUtil(negociacao.data)){ //condicional para testar se é dia util
             this.mensagemView.update('Apenas negociações em dias úteis são aceitas')
             return;
@@ -32,14 +35,6 @@ export class NegociacaoController {
 
     private ehDiaUtil(date: Date){
         return date.getDay() > DiasDaSemana.DOMINGO && date.getDay() < DiasDaSemana.SABADO
-    }
-
-    private criaNegociacao(): Negociacao {
-        const exp = /-/g;
-        const date = new Date(this.inputData.value.replace(exp, ','));
-        const quantidade = parseInt(this.inputQuantidade.value);
-        const valor = parseFloat(this.inputValor.value);
-        return new Negociacao(date, quantidade, valor);
     }
 
     private limparFormulario(): void {

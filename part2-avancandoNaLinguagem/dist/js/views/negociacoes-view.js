@@ -24,7 +24,7 @@ export class NegociacoesView extends View {
         }).join('')}
             </tbody>        
         </table>
-        `; //o join pega a lista, transforma em string e junta tudo em uma String unica para ser inserida dentro da string de template
+        `;
     }
     formatar(data) {
         return new Intl.DateTimeFormat().format(data);

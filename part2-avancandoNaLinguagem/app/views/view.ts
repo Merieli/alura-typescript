@@ -6,13 +6,29 @@ export abstract class View<T>{
 
     // No TS ao trabalhar com herança de classes e usar o modificado "protected" significa que apenas a classe pai tem acesso a propriedade, mas as classes filhas dela podem acessar a propriedade
     protected elemento: HTMLElement;
+    private escapar: boolean = false;
 
-    constructor(seletor: string){
-        this.elemento = document.querySelector(seletor);//Dessa forma o seletor é armazenado em uma variavel, atribuisndo um cache sem a necessidade do navegador buscar o elemento a todo momento
+    //inserir uma "?" após o nome do parametro, define que para o metodo ele é opcional, mas ao fazer isso é necessário definir dentro do método uma condicional que informe o que deve ser feito se o parametro for passado. Lembrando que somente os ultimos parametros de um método podem ser opcionais, porque somente os ultimos podem ser omitidos
+    constructor(seletor: string, escapar?: boolean){
+        //Dessa forma o seletor é armazenado em uma variavel, atribuindo um cache sem a necessidade do navegador buscar o elemento a todo momento
+        const elemento = document.querySelector(seletor); //quando atribuido diretamente a uma variavel o TS reconhece "elemento" como o tipo "HTMLElement"
+        if (elemento) {
+            this.elemento = elemento as HTMLElement;
+        } else{
+            throw Error(`Seletor ${seletor} não existe no DOM. Verifique.`)
+        }
+
+        if(escapar){
+            this.escapar = escapar; // se estiver sendo passado o parametro escapar ele atribui ao this.escapar o valor do parametro passado para o método
+        }
     }
 
     public update(model: T): void {
-        const template = this.template(model);
+        let template = this.template(model);
+        if (this.escapar){
+            template = template.replace(/<script>[\s\S]*?<\/script>/, ''); //regex que remove qualquer tag script da string que será inserida no DOM
+        }
+
         this.elemento.innerHTML = template;
     }
 
