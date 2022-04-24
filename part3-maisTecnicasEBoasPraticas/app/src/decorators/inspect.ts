@@ -1,3 +1,4 @@
+// Decorator de métodos:
 // quando o decorator não necessita de parametros é possível escreve-la diretamente sem a função externa
 export function inspect(
     target: any,

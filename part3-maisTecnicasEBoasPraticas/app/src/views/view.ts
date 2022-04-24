@@ -15,8 +15,8 @@ export abstract class View<T> {
     }
 
     //Com decorators a ordem de execução é de cima para baixo, mas ao modificar a classe em que o decorator está aplicado, é aplicada a modificação no método na ordem de baixo para cima
-    @inspect //como inspect não possui a função de recebimento de parametros, ela não precisa ser chamada e os "()" devem ser removidos
-    @LogarTempoDeExecucao(true)
+    //@inspect //como inspect não possui a função de recebimento de parametros, ela não precisa ser chamada e os "()" devem ser removidos
+    //@LogarTempoDeExecucao(true)
     public update(model: T): void {
         let template = this.template(model);
         this.elemento.innerHTML = template;
