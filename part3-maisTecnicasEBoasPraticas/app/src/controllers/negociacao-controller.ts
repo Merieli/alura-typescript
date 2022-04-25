@@ -5,6 +5,7 @@ import { DiasDaSemana } from '../enums/dias-da-semana.js';
 import { Negociacao } from '../models/negociacao.js';
 import { Negociacoes } from '../models/negociacoes.js';
 import { NegociacoesService } from '../services/negociacoes-service.js';
+import { imprimir } from '../utils/imprimir.js';
 import { MensagemView } from '../views/mensagem-view.js';
 import { NegociacoesView } from '../views/negociacoes-view.js';
 
@@ -29,9 +30,6 @@ export class NegociacaoController {
     @inspect
     @LogarTempoDeExecucao()
     public adiciona(): void {
-        /*
-        Zé, você já viu isso?
-        */
         const negociacao = Negociacao.criaDe(
            this.inputData.value, 
            this.inputQuantidade.value,
@@ -45,17 +43,26 @@ export class NegociacaoController {
         }
         
         this.negociacoes.adiciona(negociacao);
+        imprimir(negociacao, this.negociacoes);
         this.limparFormulario();
         this.atualizaView();
     }
 
     importaDados(): void {
-        this.negociacoesService.obterNegociacoesDoDia().then(negociacoesDeHoje => {
-            for(let negociacao of negociacoesDeHoje){
-                this.negociacoes.adiciona(negociacao);
-            }
-            this.negociacoesView.update(this.negociacoes);
-        })
+        this.negociacoesService.obterNegociacoesDoDia()
+            .then(negociacoesDeHoje => {
+                return negociacoesDeHoje.filter(negociacaoDeHoje => {
+                    return !this.negociacoes
+                        .lista()
+                        .some(negociacao => negociacao.ehIgual(negociacaoDeHoje)) //verifica se na lista de negociacoes possuir algum dado igual a negociacaoDeHoje, caso seja igual ele retorna true, por isso o "this.negociacoes" recebe a negação "!" para que se for igual não seja importado os dados novamente
+                })
+            })
+            .then(negociacoesDeHoje => {
+                for(let negociacao of negociacoesDeHoje){
+                    this.negociacoes.adiciona(negociacao);
+                }
+                this.negociacoesView.update(this.negociacoes);
+            })
     }
 
     private ehDiaUtil(data: Date) {
