@@ -1,4 +1,4 @@
-//Decorator: é uma função TS, para requisitos não funcionais da aplicação (como testes de performance), que precisa retornar uma função que tem como parametro o "target" (que em um método estatico é a função construtora da classe, e em um método que não seja estático retorna o prototype da classe),  o "propertyKey" (fornece o nome do método em formato string que foi decorado), e o "descriptor" (que conhece detalhes do método que se deseja modificar, possuindo referencia pro método original)
+// Decorator: é uma função TS, para requisitos não funcionais da aplicação (como testes de performance), que precisa retornar uma função que tem como parametro o "target" (que em um método estatico é a função construtora da classe, e em um método que não seja estático retorna o prototype da classe),  o "propertyKey" (fornece o nome do método em formato string que foi decorado), e o "descriptor" (que conhece detalhes do método que se deseja modificar, possuindo referencia pro método original)
 
 // Decorator de métodos:
 export function LogarTempoDeExecucao(emSegundos: boolean = false) {
